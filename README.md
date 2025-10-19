@@ -42,5 +42,3 @@ Build into an executable.
 ```sh
 deno task build
 ```
-
-## TODO
