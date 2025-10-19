@@ -38,5 +38,5 @@ deno task dev
 Build into an executable.
 
 ```sh
-deno task Build
+deno task build
 ```
