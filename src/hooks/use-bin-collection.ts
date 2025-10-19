@@ -1,5 +1,6 @@
 import { env } from '@/env.ts'
 import { z } from 'zod'
+import { daySchema } from '@/schema.ts'
 
 export function useBinCollection() {
 	async function getDate(): Promise<z.output<typeof binCollectionSchema>> {
@@ -22,15 +23,7 @@ export function useBinCollection() {
 
 const binCollectionSchema = z.object({
 	result: z.array(z.object({
-		ServiceDay: z.enum([
-			'Sunday',
-			'Monday',
-			'Tuesday',
-			'Wednesday',
-			'Thursday',
-			'Friday',
-			'Saturday',
-		]),
+		ServiceDay: daySchema,
 		Left: z.object({
 			Text: z.enum(['This Week', 'Next Week']),
 			Bins: z.tuple([z.literal('Rubbish')]),

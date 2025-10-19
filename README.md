@@ -6,11 +6,12 @@ Home dashboard TUI built with Ink and Deno.
 
 ## Features
 
-- Spotify viewer
-- Date and weather
-- Bin collection notifier
-- Calendar events
-- Quote of the day
+- [x] Spotify viewer
+- [x] Date and weather
+- [x] Bin collection notifier
+- [x] Quote of the day
+- [x] Water day notifier
+- [ ] Calendar events
 
 ## Requirements
 
@@ -27,7 +28,7 @@ deno task gen-types && deno task gen-certs
 Before running the app you will need to sign into the various APIs using OAuth. This will generate JSON tokens that will be automatically refreshed during runtime.
 
 ```sh
-deno task auth
+deno task oauth
 ```
 
 Run in dev mode.
@@ -41,3 +42,5 @@ Build into an executable.
 ```sh
 deno task build
 ```
+
+## TODO

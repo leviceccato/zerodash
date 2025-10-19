@@ -2,6 +2,7 @@ import { Box, type DOMElement } from 'ink'
 import { ToDo } from '@/components/ToDo.tsx'
 import { SpotifyPlayer } from '@/components/SpotifyPlayer.tsx'
 import { Date } from '@/components/Date.tsx'
+import { Advice } from '@/components/Advice.tsx'
 import { Forecast } from '@/components/Forecast.tsx'
 import { useRef } from 'react'
 import { useKeepAlive } from '@/hooks/use-keep-alive.ts'
@@ -23,7 +24,7 @@ export function App(): React.ReactNode {
 			flexDirection='row'
 			alignItems='center'
 			justifyContent='center'
-			gap={10}
+			gap={15}
 		>
 			<SpotifyPlayer boxProps={{ width: 27, ref: playerRef }} />
 			<Box width={27} height={playerSize.height} flexDirection='column' gap={1}>
@@ -32,6 +33,9 @@ export function App(): React.ReactNode {
 					<Forecast />
 				</Box>
 				<ToDo />
+			</Box>
+			<Box width={27} height={playerSize.height} flexDirection='column' gap={1}>
+				<Advice />
 			</Box>
 		</Box>
 	)

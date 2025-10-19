@@ -6,7 +6,7 @@ zerodash
 ca.crt
 ca.key
 spotify-token-data.json
-gcal-token-data.json
+google-token-data.json
 src/spotify.d.ts
 src/meteo.d.ts
 src/gcal.d.ts

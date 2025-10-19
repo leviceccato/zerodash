@@ -5,38 +5,83 @@ const redirectUri = 'https://127.0.0.1:8000'
 const codeVerifier = createCodeVerifier()
 const codeChallenge = await createCodeChallenge(codeVerifier)
 
-const authSearchParams = new URLSearchParams({
+const spotifyAuthParams = new URLSearchParams({
 	client_id: env.SPOTIFY_CLIENT_ID,
 	response_type: 'code',
-	redirect_uri: redirectUri,
+	redirect_uri: `${redirectUri}/spotify`,
 	code_challenge_method: 'S256',
 	code_challenge: codeChallenge,
 	scope: 'user-read-currently-playing user-read-playback-state',
 })
 
-const authUrl =
-	`https://accounts.spotify.com/authorize?${authSearchParams.toString()}`
+const spotifyAuthUrl =
+	`https://accounts.spotify.com/authorize?${spotifyAuthParams}`
+
+const googleAuthParams = new URLSearchParams({
+	client_id: env.GOOGLE_CLIENT_ID,
+	response_type: 'code',
+	redirect_uri: `${redirectUri}/google`,
+	code_challenge_method: 'S256',
+	code_challenge: codeChallenge,
+	scope: 'https://www.googleapis.com/auth/calendar.readonly',
+})
+
+const googleAuthUrl =
+	`https://accounts.google.com/o/oauth2/v2/auth?${googleAuthParams}`
 
 console.log(
-	`Authenticate Spotify using this URL: ${authUrl}`,
+	`Authenticate Spotify using this URL: ${spotifyAuthUrl}`,
+)
+console.log(
+	`Authenticate Google using this URL: ${googleAuthUrl}`,
 )
 
 Deno.serve({
 	cert: Deno.readTextFileSync('ca.crt'),
 	key: Deno.readTextFileSync('ca.key'),
+	/**
+	 * Remove default logging to avoid clutter with previous instructions.
+	 */
+	onListen: () => {},
 }, (request) => {
-	const code = new URL(request.url).searchParams.get('code')
+	const url = new URL(request.url)
+
+	const code = url.searchParams.get('code')
 	if (!code) {
 		return new Response(null, { status: 404 })
 	}
 
-	saveToken(code)
-	return new Response('Token saved to spotify-token.json', { status: 200 })
+	switch (url.pathname) {
+		case '/spotify':
+			saveToken(
+				code,
+				'https://accounts.spotify.com/api/token',
+				'spotify-token-data.json',
+			)
+			return new Response('Token saved to spotify-token-data.json', {
+				status: 200,
+			})
+		case '/google':
+			saveToken(
+				code,
+				'https://oauth2.googleapis.com/token',
+				'google-token-data.json',
+			)
+			return new Response('Token saved to google-token-data.json', {
+				status: 200,
+			})
+	}
+
+	return new Response(null, { status: 404 })
 })
 
-async function saveToken(code: string): Promise<void> {
+async function saveToken(
+	code: string,
+	url: string,
+	path: string,
+): Promise<void> {
 	try {
-		const response = await fetch('https://accounts.spotify.com/api/token', {
+		const response = await fetch(url, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/x-www-form-urlencoded',
@@ -56,7 +101,7 @@ async function saveToken(code: string): Promise<void> {
 		const token = await response.json()
 
 		Deno.writeTextFileSync(
-			'spotify-token-data.json',
+			path,
 			JSON.stringify(token, null, 2),
 		)
 	} catch (exception) {

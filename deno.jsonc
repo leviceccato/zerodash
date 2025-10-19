@@ -7,7 +7,7 @@
 		// Generation functions
 		"gen-types": "deno task gen-meteo-types && deno task gen-spotify-types && deno task gen-gcal-types",
 		"gen-cert": "deno run -A npm:mkcert create-ca",
-		"auth": "deno run -A --env-file src/scripts/auth.ts",
+		"oauth": "deno run -A --env-file src/scripts/oauth.ts",
 		"gen-meteo-types": "deno run -A npm:openapi-typescript https://raw.githubusercontent.com/open-meteo/open-meteo/main/openapi.yml -o src/meteo.d.ts",
 		"gen-spotify-types": "deno run -A npm:openapi-typescript https://developer.spotify.com/reference/web-api/open-api-schema.yaml -o src/spotify.d.ts",
 		"gen-gcal-types": "deno run -A npm:openapi-typescript https://api.apis.guru/v2/specs/googleapis.com/calendar/v3/openapi.json -o src/gcal.d.ts",
