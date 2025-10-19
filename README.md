@@ -1,6 +1,6 @@
 # zerodash
 
-Home automation dashboard TUI built with Ink and Deno.
+Home dashboard TUI built with Ink and Deno.
 
 ![Screenshot](https://raw.githubusercontent.com/leviceccato/zerodash/refs/heads/main/screenshot.png)
 
