@@ -1,31 +1,64 @@
 import { Box, Text } from 'ink'
 import { useZenQuotes } from '@/hooks/use-zen-quotes.ts'
 import { usePoller } from '@/hooks/use-poller.ts'
+import { useBinCollection } from '@/hooks/use-bin-collection.ts'
+import { useDate } from '@/hooks/use-date.ts'
 
 const msIn24Hours = 86_400_000
 
 export function ToDo(): React.ReactNode {
-	const values = ['asd']
-
 	const zenQuotes = useZenQuotes()
+	const binCollection = useBinCollection()
 
 	const quotePoller = usePoller(zenQuotes.getRandomQuote, msIn24Hours)
+	const binCollectionPoller = usePoller(binCollection.getDate, msIn24Hours)
+	const date = useDate({
+		weekday: 'long',
+	})
+
+	const todos: {
+		text: string
+		color: React.ComponentProps<typeof Text>['color']
+	}[] = []
+	if (
+		binCollectionPoller.state.type === 'success' &&
+		date === binCollectionPoller.state.data.result[0].ServiceDay
+	) {
+		const bins =
+			binCollectionPoller.state.data.result[0].Left.Text === 'This Week'
+				? binCollectionPoller.state.data.result[0].Left.Bins
+				: binCollectionPoller.state.data.result[0].Right.Bins
+
+		for (const bin of bins) {
+			todos.push({
+				text: bin,
+				color: bin === 'Rubbish' ? 'redBright' : 'yellow',
+			})
+		}
+	}
 
 	return (
 		<Box flexDirection='column'>
-			{values.length
+			{todos.length
 				? (
 					<>
 						<Text>TODO</Text>
-						{values.map((value) => <Text key={value}>- {value}</Text>)}
+						{todos.map((todo) => (
+							<Box>
+								<Box minWidth={2}>
+									<Text>-</Text>
+								</Box>
+								<Text key={todo.text} color={todo.color}>{todo.text}</Text>
+							</Box>
+						))}
 					</>
 				)
 				: quotePoller.state.type === 'success' &&
 					(
-						<>
+						<Box flexDirection='column' gap={1}>
 							<Text>"{quotePoller.state.data[0].q}"</Text>
 							<Text>{quotePoller.state.data[0].a}</Text>
-						</>
+						</Box>
 					)}
 		</Box>
 	)

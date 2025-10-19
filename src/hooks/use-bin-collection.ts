@@ -22,16 +22,22 @@ export function useBinCollection() {
 
 const binCollectionSchema = z.object({
 	result: z.array(z.object({
-		ServiceData: z.string(),
-		/**
-		 * This is a typo in the API
-		 */
-		calcaulated_recycle_week: z.string(),
+		ServiceDay: z.enum([
+			'Sunday',
+			'Monday',
+			'Tuesday',
+			'Wednesday',
+			'Thursday',
+			'Friday',
+			'Saturday',
+		]),
 		Left: z.object({
-			Bins: z.array(z.string()),
+			Text: z.enum(['This Week', 'Next Week']),
+			Bins: z.tuple([z.literal('Rubbish')]),
 		}),
 		Right: z.object({
-			Bins: z.array(z.string()),
+			Text: z.enum(['This Week', 'Next Week']),
+			Bins: z.tuple([z.literal('Rubbish'), z.literal('Recycle')]),
 		}),
 	})),
 })
