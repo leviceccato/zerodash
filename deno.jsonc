@@ -3,12 +3,16 @@
 		"check": "deno fmt --check && deno lint && deno check",
 		"dev": "deno run -A --unstable-temporal --env-file src/main.tsx",
 		"build": "deno task check && deno compile -A --unstable-temporal --env-file -o zerodash src/main.tsx",
-		"gen-cert": "deno run -A npm:mkcert create-ca",
+
+		// Generation functions
 		"auth": "deno run -A --env-file src/scripts/auth.ts",
+		"gen-cert": "deno run -A npm:mkcert create-ca",
 		"gen-types": "deno task gen-meteo-types && deno task gen-spotify-types && deno task gen-gcal-types",
 		"gen-meteo-types": "deno run -A npm:openapi-typescript https://raw.githubusercontent.com/open-meteo/open-meteo/main/openapi.yml -o src/meteo.d.ts",
 		"gen-spotify-types": "deno run -A npm:openapi-typescript https://developer.spotify.com/reference/web-api/open-api-schema.yaml -o src/spotify.d.ts",
 		"gen-gcal-types": "deno run -A npm:openapi-typescript https://api.apis.guru/v2/specs/googleapis.com/calendar/v3/openapi.json -o src/gcal-types.ts",
+
+		// Deploy to local server
 		"deploy": "deno compile -A --env-file --target aarch64-unknown-linux-gnu -o zerodash-pi src/main.tsx && ssh zerobox 'cat > zerodash && chmod +x zerodash' < zerodash-pi && ssh -L 8080:localhost:8080 -t zerobox './zerodash'"
 	},
 	"fmt": {
