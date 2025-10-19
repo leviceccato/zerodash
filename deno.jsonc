@@ -4,7 +4,7 @@
 		"dev": "deno run -A --unstable-temporal --env-file src/main.tsx",
 		"build": "deno task check && deno compile -A --unstable-temporal --env-file -o zerodash src/main.tsx",
 		"gen-cert": "deno run -A npm:mkcert create-ca",
-		"gen-tokens": "deno run -A --env-file src/scripts/gen-spotify-token.ts",
+		"auth": "deno run -A --env-file src/scripts/auth.ts",
 		"gen-types": "deno task gen-meteo-types && deno task gen-spotify-types && deno task gen-gcal-types",
 		"gen-meteo-types": "deno run -A npm:openapi-typescript https://raw.githubusercontent.com/open-meteo/open-meteo/main/openapi.yml -o src/meteo.d.ts",
 		"gen-spotify-types": "deno run -A npm:openapi-typescript https://developer.spotify.com/reference/web-api/open-api-schema.yaml -o src/spotify.d.ts",

@@ -10,6 +10,7 @@ Home dashboard TUI built with Ink and Deno.
 - Date and weather
 - Bin collection notifier
 - Calendar events
+- Quote of the day
 
 ## Requirements
 
@@ -26,7 +27,7 @@ deno task gen-types && deno task gen-certs
 Before running the app you will need to sign into the various APIs using OAuth. This will generate JSON tokens that will be automatically refreshed during runtime.
 
 ```sh
-deno task gen-tokens
+deno task auth
 ```
 
 Run in dev mode.

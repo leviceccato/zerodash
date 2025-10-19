@@ -1,4 +1,5 @@
 import { Box, type DOMElement } from 'ink'
+import { ToDo } from '@/components/ToDo.tsx'
 import { SpotifyPlayer } from '@/components/SpotifyPlayer.tsx'
 import { Date } from '@/components/Date.tsx'
 import { Forecast } from '@/components/Forecast.tsx'
@@ -25,9 +26,12 @@ export function App(): React.ReactNode {
 			gap={10}
 		>
 			<SpotifyPlayer boxProps={{ width: 27, ref: playerRef }} />
-			<Box width={27} flexDirection='column' height={playerSize.height}>
-				<Date />
-				<Forecast />
+			<Box width={27} height={playerSize.height} flexDirection='column' gap={1}>
+				<Box flexDirection='column'>
+					<Date />
+					<Forecast />
+				</Box>
+				<ToDo />
 			</Box>
 		</Box>
 	)
