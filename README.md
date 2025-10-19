@@ -2,7 +2,7 @@
 
 Home automation dashboard TUI built with Ink and Deno.
 
-![Screenshot](https://github.com/leviceccato/zerodash/raw/main/src/common/images/screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/leviceccato/zerodash/refs/heads/main/screenshot.png)
 
 ## Features
 
