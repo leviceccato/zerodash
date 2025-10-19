@@ -1,0 +1,12 @@
+node_modules
+dist
+.DS_Store
+.zed
+zerodash
+.env
+ca.crt
+ca.key
+spotify-token-data.json
+src/spotify.d.ts
+src/meteo.d.ts
+src/gcal.d.ts
