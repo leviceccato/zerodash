@@ -15,11 +15,6 @@
 		// Deploy to local server
 		"deploy": "deno compile -A --env-file --target aarch64-unknown-linux-gnu -o zerodash-pi src/main.tsx && ssh zerobox 'cat > zerodash && chmod +x zerodash' < zerodash-pi && ssh -L 8080:localhost:8080 -t zerobox './zerodash'"
 	},
-	"fmt": {
-		"useTabs": true,
-		"semiColons": false,
-		"singleQuote": true
-	},
 	"imports": {
 		"@/": "./src/",
 		"figlet": "npm:figlet@^1.9.3",
@@ -29,6 +24,11 @@
 		"openapi-fetch": "npm:openapi-fetch@^0.15.0",
 		"terminal-image": "npm:terminal-image@^4.0.0",
 		"zod": "npm:zod@^4.1.12"
+	},
+	"fmt": {
+		"useTabs": true,
+		"semiColons": false,
+		"singleQuote": true
 	},
 	"compilerOptions": {
 		"skipLibCheck": true,
