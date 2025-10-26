@@ -5,10 +5,11 @@ const redirectUri = 'https://127.0.0.1:8000'
 const codeVerifier = createCodeVerifier()
 const codeChallenge = await createCodeChallenge(codeVerifier)
 
+const spotifyRedirectUri = `${redirectUri}/spotify`
 const spotifyAuthParams = new URLSearchParams({
 	client_id: env.SPOTIFY_CLIENT_ID,
 	response_type: 'code',
-	redirect_uri: `${redirectUri}/spotify`,
+	redirect_uri: spotifyRedirectUri,
 	code_challenge_method: 'S256',
 	code_challenge: codeChallenge,
 	scope: 'user-read-currently-playing user-read-playback-state',
@@ -17,10 +18,11 @@ const spotifyAuthParams = new URLSearchParams({
 const spotifyAuthUrl =
 	`https://accounts.spotify.com/authorize?${spotifyAuthParams}`
 
+const googleRedirectUri = `${redirectUri}/google`
 const googleAuthParams = new URLSearchParams({
 	client_id: env.GOOGLE_CLIENT_ID,
 	response_type: 'code',
-	redirect_uri: `${redirectUri}/google`,
+	redirect_uri: googleRedirectUri,
 	code_challenge_method: 'S256',
 	code_challenge: codeChallenge,
 	scope: 'https://www.googleapis.com/auth/calendar.readonly',
@@ -56,6 +58,7 @@ Deno.serve({
 			saveToken(
 				code,
 				'https://accounts.spotify.com/api/token',
+				spotifyRedirectUri,
 				'spotify-token-data.json',
 			)
 			return new Response('Token saved to spotify-token-data.json', {
@@ -65,6 +68,7 @@ Deno.serve({
 			saveToken(
 				code,
 				'https://oauth2.googleapis.com/token',
+				googleRedirectUri,
 				'google-token-data.json',
 			)
 			return new Response('Token saved to google-token-data.json', {
@@ -78,6 +82,7 @@ Deno.serve({
 async function saveToken(
 	code: string,
 	url: string,
+	redirectUri: string,
 	path: string,
 ): Promise<void> {
 	try {
