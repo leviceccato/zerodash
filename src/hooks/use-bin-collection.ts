@@ -21,16 +21,17 @@ export function useBinCollection() {
 	}
 }
 
+const binSideSchema = z.object({
+	Text: z.enum(['This Week', 'Next Week']),
+	Bins: z.array(
+		z.union([z.literal('Rubbish'), z.literal('Recycle')]),
+	),
+})
+
 const binCollectionSchema = z.object({
 	result: z.array(z.object({
 		ServiceDay: daySchema,
-		Left: z.object({
-			Text: z.enum(['This Week', 'Next Week']),
-			Bins: z.tuple([z.literal('Rubbish')]),
-		}),
-		Right: z.object({
-			Text: z.enum(['This Week', 'Next Week']),
-			Bins: z.tuple([z.literal('Rubbish'), z.literal('Recycle')]),
-		}),
+		Left: binSideSchema,
+		Right: binSideSchema,
 	})),
 })
