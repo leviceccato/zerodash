@@ -4,6 +4,8 @@ import { SpotifyPlayer } from '@/components/SpotifyPlayer.tsx'
 import { Date } from '@/components/Date.tsx'
 import { Advice } from '@/components/Advice.tsx'
 import { Forecast } from '@/components/Forecast.tsx'
+import { StackTrace } from '@/components/StackTrace.tsx'
+import { ErrorBoundary } from '@/components/ErrorBoundary.tsx'
 import { useRef } from 'react'
 import { useKeepAlive } from '@/hooks/use-keep-alive.ts'
 import { useBoxSize } from '@/hooks/use-box-size.ts'
@@ -21,22 +23,47 @@ export function App(): React.ReactNode {
 		<Box
 			width='100%'
 			height={consoleSize.rows}
-			flexDirection='row'
-			alignItems='center'
-			justifyContent='center'
-			gap={15}
+			borderStyle='classic'
 		>
-			<SpotifyPlayer boxProps={{ width: 27, ref: playerRef }} />
-			<Box width={27} height={playerSize.height} flexDirection='column' gap={1}>
-				<Box flexDirection='column'>
-					<Date />
-					<Forecast />
+			<ErrorBoundary
+				fallback={(error) => (
+					<StackTrace
+						boxProps={{ width: '100%', height: '100%' }}
+						error={error}
+					/>
+				)}
+			>
+				<Box
+					width='100%'
+					height='100%'
+					flexDirection='row'
+					alignItems='center'
+					justifyContent='center'
+					gap={15}
+				>
+					<SpotifyPlayer boxProps={{ width: 27, ref: playerRef }} />
+					<Box
+						width={27}
+						height={playerSize.height}
+						flexDirection='column'
+						gap={1}
+					>
+						<Box flexDirection='column'>
+							<Date />
+							<Forecast />
+						</Box>
+						<ToDo />
+					</Box>
+					<Box
+						width={27}
+						height={playerSize.height}
+						flexDirection='column'
+						gap={1}
+					>
+						<Advice />
+					</Box>
 				</Box>
-				<ToDo />
-			</Box>
-			<Box width={27} height={playerSize.height} flexDirection='column' gap={1}>
-				<Advice />
-			</Box>
+			</ErrorBoundary>
 		</Box>
 	)
 }
