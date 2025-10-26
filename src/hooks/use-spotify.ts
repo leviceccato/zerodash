@@ -77,7 +77,7 @@ export function useSpotify() {
 		}
 	}
 
-	async function getPlaybackState(): Promise<PlaybackState> {
+	async function getPlaybackState(): Promise<PlaybackState | undefined> {
 		await clientReady()
 
 		const response = await spotify.current.GET('/me/player')
@@ -88,10 +88,6 @@ export function useSpotify() {
 				return await getPlaybackState()
 			}
 			throw new Error(response.error.error.message)
-		}
-
-		if (!response.data) {
-			throw new Error("Couldn't fetch playback state")
 		}
 
 		return response.data
