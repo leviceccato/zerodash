@@ -5,12 +5,7 @@ export function usePoller<TData>(
 	interval: number,
 	isEnabled = true,
 ) {
-	const [state, setState] = useState<
-		{ type: 'success'; data: TData } | { type: 'loading' } | {
-			type: 'error'
-			error: Error
-		}
-	>({ type: 'loading' })
+	const [data, setData] = useState<TData>()
 
 	useEffect(() => {
 		if (!isEnabled) {
@@ -20,20 +15,9 @@ export function usePoller<TData>(
 		let isActive = true
 
 		async function poll(): Promise<void> {
-			try {
-				const result = await func()
-				if (isActive) {
-					setState({ type: 'success', data: result })
-				}
-			} catch (exception) {
-				if (isActive) {
-					setState({
-						type: 'error',
-						error: exception instanceof Error
-							? exception
-							: new Error('Unknown error'),
-					})
-				}
+			const result = await func()
+			if (isActive) {
+				setData(result)
 			}
 		}
 
@@ -48,6 +32,6 @@ export function usePoller<TData>(
 	}, [interval, isEnabled])
 
 	return {
-		state,
+		data,
 	}
 }

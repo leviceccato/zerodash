@@ -11,7 +11,5 @@ export function useDate(options: Intl.DateTimeFormatOptions): string {
 		)
 	}
 
-	return datePoller.state.type === 'success'
-		? datePoller.state.data
-		: 'Invalid date'
+	return datePoller.data ? datePoller.data : 'Invalid date'
 }

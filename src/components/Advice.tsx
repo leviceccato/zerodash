@@ -11,9 +11,7 @@ export function Advice(): React.ReactNode {
 
 	return (
 		<Text>
-			{advicePoller.state.type === 'success'
-				? `"${advicePoller.state.data.slip.advice}"`
-				: ''}
+			{advicePoller.data ? `"${advicePoller.data.slip.advice}"` : ''}
 		</Text>
 	)
 }

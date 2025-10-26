@@ -17,16 +17,14 @@ export function SpotifyPlayer(
 	return (
 		<Box {...props.boxProps} flexDirection='column' rowGap={1}>
 			<Image
-				src={playbackStatePoller.state.type === 'success'
-					? playbackStatePoller.state.data.item?.album?.images?.[0].url
-					: undefined}
+				src={playbackStatePoller.data?.item?.album?.images?.[0].url}
 				boxProps={{ borderStyle: 'classic' }}
 				ratio={0.4}
 			/>
 			<Text>
-				{playbackStatePoller.state.type === 'success'
-					? `${playbackStatePoller.state.data.item?.name} - ${
-						playbackStatePoller.state.data.item?.artists?.map((
+				{playbackStatePoller.data
+					? `${playbackStatePoller.data.item?.name} - ${
+						playbackStatePoller.data.item?.artists?.map((
 							artist,
 						) => artist.name).join(', ')
 					}`
@@ -35,15 +33,15 @@ export function SpotifyPlayer(
 			<Box columnGap={1} padding={0}>
 				<Box minWidth={2}>
 					<Text>
-						{playbackStatePoller.state.type === 'success'
-							? playbackStatePoller.state.data.is_playing ? '|>' : '||'
+						{playbackStatePoller.data
+							? playbackStatePoller.data.is_playing ? '|>' : '||'
 							: '[]'}
 					</Text>
 				</Box>
 				<Progress
-					value={playbackStatePoller.state.type === 'success'
-						? ((playbackStatePoller.state.data.progress_ms || 0) /
-							(playbackStatePoller.state.data.item?.duration_ms || 1))
+					value={playbackStatePoller.data
+						? ((playbackStatePoller.data.progress_ms || 0) /
+							(playbackStatePoller.data.item?.duration_ms || 1))
 						: 0}
 				/>
 			</Box>

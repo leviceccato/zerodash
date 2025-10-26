@@ -9,19 +9,13 @@ export function Forecast(): React.ReactNode {
 
 	const poller = usePoller(meteo.getForecast, msInHour)
 
-	const text = poller.state.type === 'success'
-		? `${poller.state.data.current_weather?.temperature}° ${
-			weatherCodeMap[poller.state.data.current_weather?.weather_code ?? 0]
-		}`
-		: ''
-
 	return (
 		<Text>
-			{poller.state.type === 'loading'
-				? 'Loading forecast'
-				: poller.state.type === 'error'
-				? 'Failed to load forecast'
-				: text}
+			{poller.data
+				? `${poller.data.current_weather?.temperature}° ${
+					weatherCodeMap[poller.data.current_weather?.weather_code ?? 0]
+				}`
+				: 'Loading forecast'}
 		</Text>
 	)
 }

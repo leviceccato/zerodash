@@ -20,13 +20,11 @@ export function ToDo(): React.ReactNode {
 	}[] = []
 
 	if (
-		binCollectionPoller.state.type === 'success' &&
-		date === binCollectionPoller.state.data.result[0].ServiceDay
+		date === binCollectionPoller.data?.result[0].ServiceDay
 	) {
-		const bins =
-			binCollectionPoller.state.data.result[0].Left.Text === 'This Week'
-				? binCollectionPoller.state.data.result[0].Left.Bins
-				: binCollectionPoller.state.data.result[0].Right.Bins
+		const bins = binCollectionPoller.data.result[0].Left.Text === 'This Week'
+			? binCollectionPoller.data.result[0].Left.Bins
+			: binCollectionPoller.data.result[0].Right.Bins
 
 		for (const bin of bins) {
 			todos.push({
