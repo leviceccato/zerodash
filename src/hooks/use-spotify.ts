@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { z } from 'zod'
-import createClient from 'openapi-fetch'
+import createClient, { type Client } from 'openapi-fetch'
 import type { paths } from '@/spotify.d.ts'
 import { env } from '@/env.ts'
 import type { ApiResponse } from '@/openapi.ts'
@@ -8,10 +8,8 @@ import type { ApiResponse } from '@/openapi.ts'
 export type PlaybackState = ApiResponse<paths, '/me/player', 'get'>
 
 export function useSpotify() {
-	const spotify = useRef(createClient<paths>({
-		baseUrl: 'https://api.spotify.com/v1',
-	}))
-	const tokenData = useRef<z.output<typeof tokenDataSchema> | null>(null)
+	const spotify = useRef(createSpotifyClient<paths>(null))
+	const tokenData = useRef<z.output<typeof tokenDataSchema>>(undefined)
 
 	async function clientReady(): Promise<void> {
 		if (tokenData.current) {
@@ -22,31 +20,14 @@ export function useSpotify() {
 
 		const newTokenData = parseTokenData(tokenDataRaw)
 
-		updateClientWithToken(newTokenData)
+		spotify.current = createSpotifyClient<paths>(newTokenData.access_token)
 
 		tokenData.current = newTokenData
 	}
 
-	function updateClientWithToken(
-		tokenData: z.output<typeof tokenDataSchema>,
-	): void {
-		spotify.current.use({
-			onRequest: (params) => {
-				params.request.headers.set(
-					'Authorization',
-					`Bearer ${tokenData.access_token}`,
-				)
-			},
-		})
-	}
-
-	function parseTokenData(rawToken: string): z.output<typeof tokenDataSchema> {
-		return tokenDataSchema.parse(JSON.parse(rawToken))
-	}
-
 	async function refreshToken(): Promise<void> {
 		if (!tokenData.current) {
-			throw new Error('Cannot refresh token without existing token')
+			throw new Error("Can't refresh Spotify token without existing token.")
 		}
 
 		try {
@@ -71,7 +52,9 @@ export function useSpotify() {
 
 			const newTokenData = parseTokenData(data)
 
-			updateClientWithToken(newTokenData)
+			spotify.current = createSpotifyClient<paths>(newTokenData.access_token)
+
+			tokenData.current = newTokenData
 		} catch (exception) {
 			throw exception
 		}
@@ -96,6 +79,22 @@ export function useSpotify() {
 	return {
 		getPlaybackState,
 	}
+}
+
+// deno-lint-ignore ban-types -- This is what the library uses
+function createSpotifyClient<TPaths extends {}>(
+	token: string | null,
+): Client<TPaths> {
+	return createClient<TPaths>({
+		baseUrl: 'https://api.spotify.com/v1',
+		headers: !token ? {} : {
+			Authorization: `Bearer ${token}`,
+		},
+	})
+}
+
+function parseTokenData(rawToken: string): z.output<typeof tokenDataSchema> {
+	return tokenDataSchema.parse(JSON.parse(rawToken))
 }
 
 const tokenDataSchema = z.object({
