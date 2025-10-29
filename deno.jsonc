@@ -13,7 +13,7 @@
 		"gen-gcal-types": "deno run -A npm:openapi-typescript https://api.apis.guru/v2/specs/googleapis.com/calendar/v3/openapi.json -o src/gcal.d.ts",
 
 		// Deploy to local server
-		"deploy": "deno compile -A --env-file --target aarch64-unknown-linux-gnu -o zerodash-pi src/main.tsx && ssh zerobox 'cat > zerodash && chmod +x zerodash' < zerodash-pi && ssh -L 8080:localhost:8080 -t zerobox './zerodash'"
+		"deploy": "deno compile -A --unstable-temporal --env-file --target aarch64-unknown-linux-gnu -o zerodash-pi src/main.tsx && scp zerodash-pi spotify-token-data.json zerobox:~/ && ssh zerobox 'chmod +x zerodash'"
 	},
 	"imports": {
 		"@/": "./src/",
